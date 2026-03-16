@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 
 load_dotenv()
-# CORS(app)
+
 
 app = Flask(__name__)
 
@@ -168,4 +168,7 @@ def fetch_weather_and_uv(lat, lon, city_name=None, country_code=None):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    if __name__ == "__main__":
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
