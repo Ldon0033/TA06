@@ -169,6 +169,5 @@ def fetch_weather_and_uv(lat, lon, city_name=None, country_code=None):
 
 if __name__ == "__main__":
     # app.run(debug=True)
-    if __name__ == "__main__":
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
