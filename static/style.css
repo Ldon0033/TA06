@@ -587,3 +587,88 @@
 .uv-badge-extreme {
   background: #a855f7 !important;
 }
+
+#skin-tone {
+  background: #fffdf7;
+}
+
+#skin-tone select,
+#skin-tone input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 1rem;
+  margin-bottom: 14px;
+  background: white;
+}
+
+.skin-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 10px 0 18px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fffaf0;
+}
+
+.skin-swatch {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 2px solid rgba(15, 23, 42, 0.08);
+  flex-shrink: 0;
+}
+
+.skin-very-fair {
+  background: #f8d9c3;
+}
+
+.skin-fair {
+  background: #efc7a4;
+}
+
+.skin-medium {
+  background: #c68c53;
+}
+
+.skin-olive {
+  background: #8b5a2b;
+}
+
+.skin-dark {
+  background: #4a2c1d;
+}
+
+.summary-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: #fffaf0;
+}
+
+.summary-label {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+#summarySkinTone,
+#summaryUv,
+#summaryExposure,
+#summaryProtection {
+  font-weight: 800;
+  color: var(--secondary);
+}
