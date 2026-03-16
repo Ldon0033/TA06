@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SunSafe Weather & UV Checker</title>
-  <link rel="stylesheet" href="static/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <div class="topbar">
@@ -84,6 +84,80 @@
             <p>The app shows UV Index and a clear risk level so people can make better outdoor decisions.</p>
             <a href="#tips">Read tips →</a>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skin-tone">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Skin Tone & UV Guidance</h2>
+            <p>Receive more personalised sun-safety recommendations based on skin tone and real-time UV conditions.</p>
+          </div>
+        </div>
+    
+        <div class="tool-layout">
+          <div class="tool-panel">
+            <h3>Personalised UV advice</h3>
+    
+            <label for="skinTone">Select skin tone / type</label>
+            <select id="skinTone" onchange="updateSkinTonePreview()">
+              <option value="very-fair">Very fair</option>
+              <option value="fair">Fair</option>
+              <option value="medium" selected>Medium</option>
+              <option value="olive">Olive / Brown</option>
+              <option value="dark">Dark</option>
+            </select>
+    
+            <div class="skin-preview-box">
+              <div id="skinToneSwatch" class="skin-swatch skin-medium"></div>
+              <div>
+                <strong id="skinToneLabel">Medium</strong>
+                <p id="skinToneNote">Moderate natural protection, but regular UV protection is still recommended.</p>
+              </div>
+            </div>
+    
+            <label for="manualUvLevel">Current UV level</label>
+            <input type="number" id="manualUvLevel" min="0" max="20" placeholder="UV level will appear here" />
+    
+            <button class="btn btn-outline second-btn" onclick="getCurrentUvForSkinTool()">Use My Current UV</button>
+            <button class="btn btn-primary" onclick="getSkinToneAdvice()">Get Personalised Advice</button>
+    
+            <div class="result-box" id="skinToneResult">
+              Select a skin tone and use your current UV level to receive personalised advice.
+            </div>
+          </div>
+    
+          <div class="tool-panel">
+            <h3>Personalised summary</h3>
+    
+            <div class="summary-card">
+              <div class="summary-row">
+                <span class="summary-label">Selected skin tone</span>
+                <span id="summarySkinTone">Medium</span>
+              </div>
+    
+              <div class="summary-row">
+                <span class="summary-label">Current UV</span>
+                <span id="summaryUv">--</span>
+              </div>
+    
+              <div class="summary-row">
+                <span class="summary-label">Estimated safe exposure</span>
+                <span id="summaryExposure">--</span>
+              </div>
+    
+              <div class="summary-row">
+                <span class="summary-label">Protection level</span>
+                <span id="summaryProtection">--</span>
+              </div>
+            </div>
+    
+            <div class="result-box advice-box" id="summaryAdvice">
+              Personalised protection advice will appear here after you generate a result.
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -246,6 +320,6 @@
     </div>
   </footer>
 
-  <script src="static/script.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
