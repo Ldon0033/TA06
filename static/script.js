@@ -62,10 +62,8 @@ function updateWeatherUI(data) {
   badge.textContent =
     data.uvi === null || data.uvi === undefined ? "UV --" : `UV ${data.uvi}`;
 
-  // 先恢复成基础圆形样式
   badge.className = "uv-badge";
 
-  // 再根据 UV risk 叠加颜色 class
   if (uvRisk === "Low") {
     badge.classList.add("uv-badge-low");
   } else if (uvRisk === "Moderate") {
