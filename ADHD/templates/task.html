@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHD Task Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <a class="back-link" href="/">← Back to Home</a>
+    </div>
+
+    <div class="task-container">
+        <div class="progress-label">
+            <span id="stepText">Step 1 of 5</span>
+            <span id="percentText">20% complete</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="task-card" id="step1">
+            <h2>What task do you need to complete?</h2>
+            <label>Task Name</label>
+            <input type="text" id="taskName" placeholder="e.g., Write report, Clean room, Study for exam">
+            <div class="button-row">
+                <div></div>
+                <button onclick="goToStep(2)">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="task-card hidden" id="step2">
+            <h2>When is this due?</h2>
+            <label>Due Date (Optional)</label>
+            <input type="date" id="dueDate">
+            <p>Setting a due date helps with planning. You can skip this if unsure.</p>
+            <div class="button-row">
+                <button class="secondary" onclick="goToStep(1)">Back</button>
+                <button onclick="goToStep(3)">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="task-card hidden" id="step3">
+            <h2>How big is this task?</h2>
+            <label>Rate the size (1 = Small, 5 = Very Large)</label>
+            <input type="range" min="1" max="5" value="3" id="taskSize" oninput="updateSizeLabel()">
+
+            <div class="scale-row">
+                <span>1</span>
+                <span>2</span>
+                <span class="active-scale">3</span>
+                <span>4</span>
+                <span>5</span>
+            </div>
+
+            <div class="size-badge-wrap">
+                <p id="sizeLabel" class="size-badge">Medium task</p>
+            </div>
+            <div class="button-row">
+                <button class="secondary" onclick="goToStep(2)">Back</button>
+                <button onclick="generateSteps()">Generate Steps</button>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="task-card hidden" id="step4">
+            <h2>Your personalized task steps</h2>
+
+            <div class="task-summary">
+                <p><strong id="step4TaskName"></strong></p>
+                <p id="step4DueDate"></p>
+            </div>
+
+            <h3>Recommended Steps</h3>
+            <div id="step4List"></div>
+
+            <div class="button-row">
+                <button class="secondary" onclick="goToStep(3)">Back</button>
+                <button onclick="goToStep(5)">Next</button>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="task-card hidden" id="step5">
+            <h2>Estimate time for each step</h2>
+
+            <div class="time-total-box">
+                <span>Total Time</span>
+                <strong id="finalTotalTime">0 mins</strong>
+            </div>
+
+            <h3>How long will each step take? (minutes)</h3>
+            <div id="step5TimeList"></div>
+
+            <div class="button-row">
+                <button class="secondary" onclick="goToStep(4)">Back</button>
+                <button onclick="startTask()">Just Start!</button>
+            </div>
+
+            <div class="button-row" style="margin-top: 12px;">
+                <div></div>
+                <button class="secondary" onclick="resetTask()">Start New Task</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToStep(step) {
+            document.getElementById("step1").classList.add("hidden");
+            document.getElementById("step2").classList.add("hidden");
+            document.getElementById("step3").classList.add("hidden");
+            document.getElementById("step4").classList.add("hidden");
+            document.getElementById("step5").classList.add("hidden");
+
+            document.getElementById("step" + step).classList.remove("hidden");
+
+            const stepText = document.getElementById("stepText");
+            const percentText = document.getElementById("percentText");
+            const progressFill = document.getElementById("progressFill");
+
+            if (step === 1) {
+                stepText.innerText = "Step 1 of 5";
+                percentText.innerText = "20% complete";
+                progressFill.style.width = "20%";
+            } else if (step === 2) {
+                stepText.innerText = "Step 2 of 5";
+                percentText.innerText = "40% complete";
+                progressFill.style.width = "40%";
+            } else if (step === 3) {
+                stepText.innerText = "Step 3 of 5";
+                percentText.innerText = "60% complete";
+                progressFill.style.width = "60%";
+            } else if (step === 4) {
+                stepText.innerText = "Step 4 of 5";
+                percentText.innerText = "80% complete";
+                progressFill.style.width = "80%";
+            } else if (step === 5) {
+                stepText.innerText = "Step 5 of 5";
+                percentText.innerText = "100% complete";
+                progressFill.style.width = "100%";
+            }
+        }
+
+        function updateSizeLabel() {
+            const size = parseInt(document.getElementById("taskSize").value);
+            const label = document.getElementById("sizeLabel");
+
+            if (size <= 2) {
+                label.innerText = "Small task";
+            } else if (size === 3) {
+                label.innerText = "Medium task";
+            } else {
+                label.innerText = "Large task";
+            }
+        }
+
+        function generateSteps() {
+            const taskName = document.getElementById("taskName").value.trim();
+            const dueDate = document.getElementById("dueDate").value;
+            const size = parseInt(document.getElementById("taskSize").value);
+
+            if (!taskName) {
+                alert("Please enter a task name first.");
+                goToStep(1);
+                return;
+            }
+
+            if (taskName.length < 3) {
+                alert("Task name is too short.");
+                goToStep(1);
+                return;
+            }
+
+            if (taskName.length > 80) {
+                alert("Task name is too long. Please keep it under 80 characters.");
+                goToStep(1);
+                return;
+            }
+
+            if (!/[a-zA-Z0-9]/.test(taskName)) {
+                alert("Please enter a meaningful task name.");
+                goToStep(1);
+                return;
+            }
+
+            let steps = [];
+
+            if (size <= 2) {
+                steps = [
+                    "Understand the task",
+                    "Do the main work",
+                    "Review and finish"
+                ];
+            } else if (size === 3) {
+                steps = [
+                    "Break the task into smaller parts",
+                    "Prepare what you need",
+                    "Start with the easiest part",
+                    "Work on the main sections",
+                    "Review your progress"
+                ];
+            } else {
+                steps = [
+                    "Break the task into subtasks",
+                    "Prepare tools and materials",
+                    "Start with the first section",
+                    "Work through the main parts",
+                    "Take a short break",
+                    "Complete remaining work",
+                    "Review and polish"
+                ];
+            }
+
+            // Save globally for Step 5
+            window.generatedSteps = steps;
+
+            // Fill Step 4 summary
+            document.getElementById("step4TaskName").innerText = taskName;
+            document.getElementById("step4DueDate").innerText = dueDate ? "Due: " + dueDate : "No due date set";
+
+            // Fill Step 4 steps
+            const step4List = document.getElementById("step4List");
+            step4List.innerHTML = "";
+
+            steps.forEach((step, index) => {
+                const div = document.createElement("div");
+                div.className = "step-item";
+                div.innerHTML = `
+                    <span class="step-number">${index + 1}</span>
+                    <span class="step-text">${step}</span>
+                `;
+                step4List.appendChild(div);
+            });
+
+            // Fill Step 5 time inputs
+            const step5TimeList = document.getElementById("step5TimeList");
+            step5TimeList.innerHTML = "";
+
+            steps.forEach((step, index) => {
+                const div = document.createElement("div");
+                div.className = "time-step-item";
+                div.innerHTML = `
+                    <p><strong>${index + 1}.</strong> ${step}</p>
+                    <input type="number" id="timeInput${index}" value="10" min="1" onchange="updateFinalTime()">
+                    <span>minutes</span>
+                `;
+                step5TimeList.appendChild(div);
+            });
+
+            updateFinalTime();
+            goToStep(4);
+        }
+
+        function updateFinalTime() {
+            const inputs = document.querySelectorAll('#step5TimeList input');
+            let total = 0;
+
+            inputs.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+
+            document.getElementById("finalTotalTime").innerText = total + " mins";
+        }
+
+        function startTask() {
+            updateFinalTime();
+            alert("Task started!");
+        }
+
+        function resetTask() {
+            document.getElementById("taskName").value = "";
+            document.getElementById("dueDate").value = "";
+            document.getElementById("taskSize").value = 3;
+            updateSizeLabel();
+
+            document.getElementById("step4TaskName").innerText = "";
+            document.getElementById("step4DueDate").innerText = "";
+            document.getElementById("step4List").innerHTML = "";
+            document.getElementById("step5TimeList").innerHTML = "";
+            document.getElementById("finalTotalTime").innerText = "0 mins";
+
+            window.generatedSteps = [];
+            goToStep(1);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHD Insights</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <a class="back-link" href="/">← Back to Home</a>
+    </div>
+
+    <div class="insights-container">
+        <h1>Health & Activity Benchmarks</h1>
+        <p>Evidence-based benchmarks for your age group. All data sourced from the Australian Bureau of Statistics (ABS).</p>
+
+        <div class="age-select">
+            <label for="age">Select Age Group:</label>
+            <select id="age" onchange="loadData()">
+                <option value="5-11">5-11 year</option>
+                <option value="12-17">12-17 year</option>
+                <option value="18-24" selected>18-24 year</option>
+                <option value="25-34">25-34 year</option>
+                <option value="35-44">35-44 year</option>
+                <option value="45-54">45-54 year</option>
+                <option value="55-64">55-64 year</option>
+                <option value="65+">65+ years</option>
+            </select>
+        </div>
+
+        <div class="insight-grid">
+            <div class="insight-card sleep">
+                <h3>Sleep Recommendation</h3>
+                <p class="big-number" id="sleep"></p>
+                <p>Recommended benchmark for this age group</p>
+                <p class="source">Source: ABS National Health Survey</p>
+            </div>
+
+            <div class="insight-card activity">
+                <h3>Physical Activity</h3>
+                <p class="big-number" id="activity"></p>
+                <p>Suggested activity guideline</p>
+                <p class="source">Source: ABS Physical Activity Survey</p>
+            </div>
+
+            <div class="insight-card screen">
+                <h3>Screen Time Impact</h3>
+                <p class="big-number" id="screen"></p>
+                <p>Daily screen time benchmark</p>
+                <p class="source">Source: ABS Screen Time Study</p>
+            </div>
+
+            <div class="insight-card sedentary">
+                <h3>Sedentary Time</h3>
+                <p class="big-number" id="sedentary"></p>
+                <p>Average sedentary hours</p>
+                <p class="source">Source: ABS Time Use Survey</p>
+            </div>
+        </div>
+
+        <div class="about-box">
+            <h3>About These Insights</h3>
+            <p>
+                These figures represent general population benchmarks. Individual needs may vary,
+                especially for people with ADHD. This page is for lifestyle awareness only and is
+                not medical advice.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function loadData() {
+            const age = document.getElementById("age").value;
+
+            fetch('/get_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ age: age })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("sleep").innerText = data.sleep || "-";
+                document.getElementById("activity").innerText = data.activity || "-";
+                document.getElementById("screen").innerText = data.screen || "-";
+                document.getElementById("sedentary").innerText = data.sedentary || "-";
+            })
+            .catch(error => {
+                console.error("Error loading data:", error);
+            });
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>
