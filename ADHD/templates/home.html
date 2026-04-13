@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADHD Support App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <h1>ADHD Support App</h1>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="stat-badge">600,000+</div>
+            <p>Australians living with ADHD</p>
+            <h2>Support Tools</h2>
+        </div>
+
+        <div class="tool-grid">
+            <div class="tool-card">
+                <h3>Task Decomposition</h3>
+                <p>Break down complex tasks into manageable steps.</p>
+                <a href="/task"><button>Get Started</button></a>
+            </div>
+
+            <div class="tool-card">
+                <h3>Insights</h3>
+                <p>Explore health and activity benchmarks for your age group.</p>
+                <a href="/insights"><button>Get Started</button></a>
+            </div>
+        </div>
+
+        <div class="support-section">
+            <h3>Support Services</h3>
+            <div class="support-links">
+                <a href="https://www.adhdaustralia.org.au/" target="_blank">
+                    <button type="button">ADHD Australia</button>
+                </a>
+        
+                <a href="https://www.beyondblue.org.au/?gad_source=1&gad_campaignid=23478719000&gbraid=0AAAAADuibRaI1BwWEtvkuv-1pe9kEwQ10&gclid=Cj0KCQjwqPLOBhCiARIsAKRMPZoAhm0wlhgjilhn1O4kxy7tzlUhUIK60Hxai69i76yyWvTmaPco4cQaAlbyEALw_wcB" target="_blank">
+                    <button type="button">Beyond Blue</button>
+                </a>
+        
+                <button type="button" onclick="showSupportEmail()">Support Email</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function showSupportEmail() {
+        alert("Support Email:\nxliu0193@student.monash.edu\nldon0033@student.monash.edu");
+    }
+</script>
