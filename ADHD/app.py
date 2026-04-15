@@ -1,6 +1,18 @@
 from flask import Flask, render_template, request, jsonify
+from google import genai
+from dotenv import load_dotenv
+import os
+import json
+
+load_dotenv()
 
 app = Flask(__name__)
+
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY not found in .env file")
+
+client = genai.Client(api_key=api_key)
 
 DATA = {
     "5-11": {"sleep": "10 hours", "activity": "60 min/day", "screen": "2 hrs/day", "sedentary": "4.2 hrs/day"},
@@ -30,89 +42,6 @@ def get_data():
     age = request.json.get("age")
     return jsonify(DATA.get(age, {}))
 
-def generate_steps(task):
-    task = task.lower()
-
-    keywords = {
-        "study": [
-            "Review lecture notes",
-            "Summarize key topics",
-            "Practice questions",
-            "Test yourself",
-            "Final revision"
-        ],
-        "exam": [
-            "Review important chapters",
-            "Practice past exams",
-            "Memorize key concepts",
-            "Take mock test",
-            "Rest before exam"
-        ],
-        "clean": [
-            "Organize items",
-            "Clean surfaces",
-            "Vacuum floor",
-            "Throw away trash",
-            "Final check"
-        ],
-        "workout": [
-            "Warm up",
-            "Do main exercises",
-            "Track progress",
-            "Cool down",
-            "Stretch"
-        ],
-        "code": [
-            "Understand requirements",
-            "Break into small tasks",
-            "Write code",
-            "Test and debug",
-            "Refactor code"
-        ],
-        "assignment": [
-            "Understand requirements",
-            "Research topic",
-            "Write draft",
-            "Edit and improve",
-            "Submit final version"
-        ],
-        "shopping": [
-            "Make a list",
-            "Check budget",
-            "Buy items",
-            "Organize purchases",
-            "Review spending"
-        ],
-        "interview": [
-            "Research company",
-            "Prepare answers",
-            "Practice speaking",
-            "Prepare questions",
-            "Review before interview"
-        ],
-        "write": [
-            "Plan structure",
-            "Write draft",
-            "Edit content",
-            "Check grammar",
-            "Finalize writing"
-        ]
-    }
-
-    # find matching keywords
-    for key in keywords:
-        if key in task:
-            return keywords[key]
-
-    # fallback (any task can use)
-    return [
-        "Break task into smaller steps",
-        "Set a clear goal",
-        "Start with the easiest part",
-        "Take short breaks",
-        "Review and complete"
-    ]
-
 # Step 4: intelligent decomposition
 def generate_steps(task, size):
     task = task.lower()
@@ -132,6 +61,57 @@ def estimate_time(steps):
     times = [10 for _ in steps]
     total = sum(times)
     return times, total
+
+@app.route('/api/generate_steps_ai', methods=['POST'])
+def generate_steps_ai():
+    data = request.get_json()
+
+    task_name = data.get("task_name", "").strip()
+    due_date = data.get("due_date", "").strip()
+    task_size = data.get("task_size", 3)
+
+    if not task_name:
+        return jsonify({"error": "Task name is required"}), 400
+
+    prompt = f"""
+You are helping a university student with ADHD break down a task into manageable steps.
+
+Task name: {task_name}
+Due date: {due_date if due_date else "No due date"}
+Task size: {task_size} (1 = small, 5 = very large)
+
+Please return JSON only in this exact format:
+{{
+  "steps": ["step 1", "step 2", "step 3"],
+  "time_minutes": [10, 15, 10]
+}}
+
+Rules:
+- Give 3 to 7 steps
+- Use simple English
+- Steps should be short, practical, and clear
+- time_minutes must match the number of steps
+- Make the answer suitable for a student with ADHD
+"""
+
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+
+        text = response.text.strip()
+        text = text.replace("```json", "").replace("```", "").strip()
+
+        result = json.loads(text)
+        return jsonify(result)
+
+    except Exception as e:
+        print("AI ERROR:", e)
+        return jsonify({
+            "error": "Failed to generate AI steps",
+            "details": str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
