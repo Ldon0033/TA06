@@ -187,72 +187,73 @@
                 return;
             }
 
-            let steps = [];
+            fetch("/api/generate_steps_ai", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    task_name: taskName,
+                    due_date: dueDate,
+                    task_size: size
+                })
+            })
+            .then(async response => {
+                const data = await response.json();
 
-            if (size <= 2) {
-                steps = [
-                    "Understand the task",
-                    "Do the main work",
-                    "Review and finish"
-                ];
-            } else if (size === 3) {
-                steps = [
-                    "Break the task into smaller parts",
-                    "Prepare what you need",
-                    "Start with the easiest part",
-                    "Work on the main sections",
-                    "Review your progress"
-                ];
-            } else {
-                steps = [
-                    "Break the task into subtasks",
-                    "Prepare tools and materials",
-                    "Start with the first section",
-                    "Work through the main parts",
-                    "Take a short break",
-                    "Complete remaining work",
-                    "Review and polish"
-                ];
-            }
+                if (!response.ok) {
+                    throw new Error(data.error + (data.details ? " | " + data.details : ""));
+                }
 
-            // Save globally for Step 5
-            window.generatedSteps = steps;
+                return data;
+            })
+            .then(data => {
+                const steps = data.steps || [];
+                const times = data.time_minutes || [];
 
-            // Fill Step 4 summary
-            document.getElementById("step4TaskName").innerText = taskName;
-            document.getElementById("step4DueDate").innerText = dueDate ? "Due: " + dueDate : "No due date set";
+                if (steps.length === 0 || steps.length !== times.length) {
+                    alert("AI response format is invalid.");
+                    return;
+                }
 
-            // Fill Step 4 steps
-            const step4List = document.getElementById("step4List");
-            step4List.innerHTML = "";
+                document.getElementById("step4TaskName").innerText = taskName;
+                document.getElementById("step4DueDate").innerText =
+                    dueDate ? "Due: " + dueDate : "No due date set";
 
-            steps.forEach((step, index) => {
-                const div = document.createElement("div");
-                div.className = "step-item";
-                div.innerHTML = `
-                    <span class="step-number">${index + 1}</span>
-                    <span class="step-text">${step}</span>
-                `;
-                step4List.appendChild(div);
+                const step4List = document.getElementById("step4List");
+                step4List.innerHTML = "";
+
+                steps.forEach((step, index) => {
+                    const div = document.createElement("div");
+                    div.className = "step-item";
+                    div.innerHTML = `
+                        <span class="step-number">${index + 1}</span>
+                        <span class="step-text">${step}</span>
+                    `;
+                    step4List.appendChild(div);
+                });
+
+                const step5TimeList = document.getElementById("step5TimeList");
+                step5TimeList.innerHTML = "";
+
+                steps.forEach((step, index) => {
+                    const div = document.createElement("div");
+                    div.className = "time-step-item";
+                    div.innerHTML = `
+                        <p><strong>${index + 1}.</strong> ${step}</p>
+                        <input type="number" id="timeInput${index}" value="${times[index]}" min="1" onchange="updateFinalTime()">
+                        <span>minutes</span>
+                    `;
+                    step5TimeList.appendChild(div);
+                });
+
+                updateFinalTime();
+                goToStep(4);
+            })
+            .catch(error => {
+                console.error(error);
+                alert("Failed to generate AI steps: " + error.message);
             });
-
-            // Fill Step 5 time inputs
-            const step5TimeList = document.getElementById("step5TimeList");
-            step5TimeList.innerHTML = "";
-
-            steps.forEach((step, index) => {
-                const div = document.createElement("div");
-                div.className = "time-step-item";
-                div.innerHTML = `
-                    <p><strong>${index + 1}.</strong> ${step}</p>
-                    <input type="number" id="timeInput${index}" value="10" min="1" onchange="updateFinalTime()">
-                    <span>minutes</span>
-                `;
-                step5TimeList.appendChild(div);
-            });
-
-            updateFinalTime();
-            goToStep(4);
         }
 
         function updateFinalTime() {
