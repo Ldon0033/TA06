@@ -1,57 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADHD Support App</title>
+    <title>FocusReset | Empowering ADHD Minds</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-    <div class="navbar">
-        <h1>ADHD Support App</h1>
-    </div>
-
-    <div class="container">
-        <div class="hero">
-            <div class="stat-badge">600,000+</div>
-            <p>Australians living with ADHD</p>
-            <h2>Support Tools</h2>
-        </div>
-
-        <div class="tool-grid">
-            <div class="tool-card">
-                <h3>Task Decomposition</h3>
-                <p>Break down complex tasks into manageable steps.</p>
-                <a href="/task"><button>Get Started</button></a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="/static/logo.png" alt="FocusReset Logo" onerror="this.style.display='none'">
+                <span>FocusReset</span>
             </div>
-
-            <div class="tool-card">
-                <h3>Insights</h3>
-                <p>Explore health and activity benchmarks for your age group.</p>
-                <a href="/insights"><button>Get Started</button></a>
+            <div class="nav-links">
+                <a href="#section-tools">Tools</a>
+                <a href="#section-insights">Insights</a>
+                <a href="#section-support">Support</a>
             </div>
         </div>
+    </nav>
 
-        <div class="support-section">
-            <h3>Support Services</h3>
-            <div class="support-links">
-                <a href="https://www.adhdaustralia.org.au/" target="_blank">
-                    <button type="button">ADHD Australia</button>
-                </a>
-        
-                <a href="https://www.beyondblue.org.au/?gad_source=1&gad_campaignid=23478719000&gbraid=0AAAAADuibRaI1BwWEtvkuv-1pe9kEwQ10&gclid=Cj0KCQjwqPLOBhCiARIsAKRMPZoAhm0wlhgjilhn1O4kxy7tzlUhUIK60Hxai69i76yyWvTmaPco4cQaAlbyEALw_wcB" target="_blank">
-                    <button type="button">Beyond Blue</button>
-                </a>
-        
-                <button type="button" onclick="showSupportEmail()">Support Email</button>
+    <div class="main-scroller">
+        <section class="full-page hero-bg hero-section">
+            <div class="hero-content">
+
+                <h1>FocusReset<br>Empowering ADHD Minds <br>Across Australia</h1>
+
+                <p class="hero-desc">
+                    ADHD is not a lack of will — it is a different way of processing the world.
+                    FocusReset helps users turn overwhelm into action with structured, evidence-based support.
+                </p>
+
+                <div class="hero-btns">
+                    <a href="#section-tools" class="btn-primary">Get Started</a>
+                    <a href="#section-insights" class="btn-text-link">Learn More →</a>
+                </div>
+            </div>
+
+            <!-- right side visual card -->
+            <div class="hero-side-card">
+                <div class="hero-side-card-inner">
+                    <p class="mini-label">ADHD in Australia</p>
+                    <div class="big-stat">600,000+</div>
+                    <p class="mini-desc">
+                        Many Australians live with ADHD every day, often facing challenges in task initiation,
+                        time management, and routine consistency.
+                    </p>
+                    <button class="btn-secondary" onclick="openAdhdStatModal()">How common?</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal -->
+        <div id="adhdStatModal" class="stat-modal hidden">
+            <div class="stat-modal-overlay" onclick="closeAdhdStatModal()"></div>
+            <div class="stat-modal-content">
+                <button class="close-modal-btn" onclick="closeAdhdStatModal()">×</button>
+                <p class="modal-top-text">Estimated ADHD prevalence in Australia</p>
+                <div class="modal-big-number">1 in 20</div>
+                <p class="modal-bottom-text">
+                    ADHD affects a significant number of Australians. Early understanding, support,
+                    and practical tools can make daily life more manageable.
+                </p>
             </div>
         </div>
-    </div>
+
+        <script>
+            function openAdhdStatModal() {
+                document.getElementById("adhdStatModal").classList.remove("hidden");
+                document.body.style.overflow = "hidden";
+            }
+
+            function closeAdhdStatModal() {
+                document.getElementById("adhdStatModal").classList.add("hidden");
+                document.body.style.overflow = "auto";
+            }
+        </script>
+
+        <section class="focus-section" id="section-tools">
+            <div class="focus-wrapper">
+                <div class="section-heading">
+                    <h2>Focus & Productivity</h2>
+                    <p>
+                        We turn overwhelming days into manageable moments. Our tools are designed
+                        to reduce cognitive load and help users get started more easily.
+                    </p>
+                </div>
+
+                <div class="focus-card-grid">
+                    <div class="focus-card">
+                        <div class="focus-icon">⚡</div>
+                        <h3>Task Decomposition</h3>
+                        <p>
+                            Feeling stuck on a big project? We help turn large goals into smaller,
+                            clearer steps so it feels easier to begin.
+                        </p>
+                        <a href="/task" class="focus-card-btn btn-task">
+                            Break it down →
+                        </a>
+                    </div>
+
+                    <div class="focus-card">
+                        <div class="focus-icon">📊</div>
+                        <h3>Lifestyle Insights</h3>
+                        <p>
+                            See how your daily habits connect with focus, energy, and routine
+                            consistency so you can better understand what works for you.
+                        </p>
+                        <a href="/insights" class="focus-card-btn btn-insight">
+                            Show me my patterns →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-insights" class="full-page dark-slate-bg">
+            <div class="content-wrapper split-layout">
+                <div class="text-side">
+                    <h2 class="section-title">The Power of Awareness</h2>
+                    <p>Data from the Australian Bureau of Statistics (ABS) shows that consistent routines and physical
+                        activity significantly support neurodivergent focus.</p>
+                    <div class="quote-box">
+                        "Managing ADHD is 20% strategy and 80% environment. FocusReset helps you master both."
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="number">1 in 20</span>
+                        <span class="label">Australians are navigating ADHD daily.</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="number">150min</span>
+                        <span class="label">Recommended weekly activity for cognitive health.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <div class="footer-container">
+                <div class="footer-grid">
+                    <div class="footer-col brand-col">
+                        <div class="footer-logo">FocusReset</div>
+                        <p>Simple tools designed for focus, clarity, and daily success for ADHD minds in Australia.</p>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="https://www.adhdaustralia.org.au/">ADHD Australia</a></li>
+                            <li><a href="https://www.beyondblue.org.au/">Beyond Blue</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h4>About Us</h4>
+                        <ul>
+
+                            <li>
+                                <span style="color: #64748b; font-size: 15px;">support@focusreset.com.au</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <div class="copyright">© 2026 FocusReset. All rights reserved.</div>
+                    <div class="Team information"> By Monash TA06</div>
+                    <div class="social-links">
+                        <a href="#">LN</a><a href="#">X</a><a href="#">IG</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
 </body>
-</html>
 
-<script>
-    function showSupportEmail() {
-        alert("Support Email:\nxliu0193@student.monash.edu\nldon0033@student.monash.edu");
-    }
-</script>
+</html>

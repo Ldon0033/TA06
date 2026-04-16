@@ -24,6 +24,7 @@
         <a href="#audiences">For Everyone</a>
         <a href="#contact">Contact</a>
         <a href="#tool" class="btn btn-primary">Check Weather Now</a>
+        <a href="#skin-tone" class="btn btn-outline">Personalised UV Advice</a>
       </nav>
     </div>
   </header>
@@ -40,14 +41,14 @@
           </p>
           <div class="hero-actions">
             <a href="#tool" class="btn btn-primary">Open the Live Tool</a>
-            <a href="#tips" class="btn btn-outline">See Protection Tips</a>
+            <a href="#skin-tone" class="btn btn-outline">Personalised UV Advice</a>
           </div>
           <p><strong>Project goal:</strong> combine a clean public-health style interface with real weather and UV data.</p>
         </div>
 
         <div class="hero-card">
           <div class="uv-badge" id="heroUvBadge">UV --</div>
-          <h3>Today's quick reminder</h3>
+          <h3>Clothing recommendations</h3>
           <p id="heroReminder">
             Use the tool below to check current weather, UV risk, and practical outdoor advice for your area.
           </p>
@@ -60,30 +61,70 @@
       </div>
     </section>
 
-    <section id="about">
+    <section class="tool-box" id="tool">
       <div class="container">
         <div class="section-head">
           <div>
-            <h2>About this website</h2>
-            <p>This project now uses Flask + JavaScript + OpenWeather API, while keeping the original polished homepage layout.</p>
+            <h2>Live Weather & UV Tool</h2>
+            <p>Search by city or use your current location to get real weather and UV information.</p>
           </div>
         </div>
-        <div class="cards">
-          <article class="card">
-            <h3>Live weather</h3>
-            <p>Users can enter a city name to get current temperature, humidity, wind speed, and weather conditions.</p>
-            <a href="#tool">Try the tool →</a>
-          </article>
-          <article class="card">
-            <h3>Automatic location</h3>
-            <p>Users can allow browser geolocation and instantly check weather and UV for their current location.</p>
-            <a href="#tool">Use my location →</a>
-          </article>
-          <article class="card">
-            <h3>UV awareness</h3>
-            <p>The app shows UV Index and a clear risk level so people can make better outdoor decisions.</p>
-            <a href="#tips">Read tips →</a>
-          </article>
+
+        <div class="tool-layout">
+          <div class="tool-panel">
+            <h3>Search by city</h3>
+            <label for="cityInput">Enter city name</label>
+            <input type="text" id="cityInput" placeholder="Example: Melbourne" />
+
+            <button class="btn btn-primary" onclick="getWeatherByCity()">Check Weather</button>
+            <button class="btn btn-outline second-btn" onclick="useMyLocation()">Use My Location</button>
+
+            <div class="result-box" id="statusBox">Weather result will appear here.</div>
+          </div>
+
+          <div class="tool-panel">
+            <h3>Live result</h3>
+            <div class="weather-card">
+              <div class="weather-top">
+                <div>
+                  <h4 id="resultCity">No location selected</h4>
+                  <p id="resultDesc">Weather description will appear here.</p>
+                </div>
+                <img id="weatherIcon" class="weather-icon" alt="Weather icon" src="" style="display:none;">
+              </div>
+
+              <div class="weather-grid">
+                <div class="weather-item">
+                  <span class="label">Temperature</span>
+                  <span id="resultTemp">-- °C</span>
+                </div>
+                <div class="weather-item">
+                  <span class="label">Feels Like</span>
+                  <span id="resultFeelsLike">-- °C</span>
+                </div>
+                <div class="weather-item">
+                  <span class="label">Humidity</span>
+                  <span id="resultHumidity">-- %</span>
+                </div>
+                <div class="weather-item">
+                  <span class="label">Wind Speed</span>
+                  <span id="resultWind">-- m/s</span>
+                </div>
+                <div class="weather-item">
+                  <span class="label">UV Index</span>
+                  <span id="resultUvi">--</span>
+                </div>
+                <div class="weather-item">
+                  <span class="label">UV Risk</span>
+                  <span id="resultUvRisk">--</span>
+                </div>
+              </div>
+
+              <div class="result-box advice-box" id="adviceBox">
+                Enter a city or use your current location to see cloth recommendations.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -187,74 +228,6 @@
       </div>
     </section>
 
-    <section class="tool-box" id="tool">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <h2>Live Weather & UV Tool</h2>
-            <p>Search by city or use your current location to get real weather and UV information.</p>
-          </div>
-        </div>
-
-        <div class="tool-layout">
-          <div class="tool-panel">
-            <h3>Search by city</h3>
-            <label for="cityInput">Enter city name</label>
-            <input type="text" id="cityInput" placeholder="Example: Melbourne" />
-
-            <button class="btn btn-primary" onclick="getWeatherByCity()">Check Weather</button>
-            <button class="btn btn-outline second-btn" onclick="useMyLocation()">Use My Location</button>
-
-            <div class="result-box" id="statusBox">Weather result will appear here.</div>
-          </div>
-
-          <div class="tool-panel">
-            <h3>Live result</h3>
-            <div class="weather-card">
-              <div class="weather-top">
-                <div>
-                  <h4 id="resultCity">No location selected</h4>
-                  <p id="resultDesc">Weather description will appear here.</p>
-                </div>
-                <img id="weatherIcon" class="weather-icon" alt="Weather icon" src="" style="display:none;">
-              </div>
-
-              <div class="weather-grid">
-                <div class="weather-item">
-                  <span class="label">Temperature</span>
-                  <span id="resultTemp">-- °C</span>
-                </div>
-                <div class="weather-item">
-                  <span class="label">Feels Like</span>
-                  <span id="resultFeelsLike">-- °C</span>
-                </div>
-                <div class="weather-item">
-                  <span class="label">Humidity</span>
-                  <span id="resultHumidity">-- %</span>
-                </div>
-                <div class="weather-item">
-                  <span class="label">Wind Speed</span>
-                  <span id="resultWind">-- m/s</span>
-                </div>
-                <div class="weather-item">
-                  <span class="label">UV Index</span>
-                  <span id="resultUvi">--</span>
-                </div>
-                <div class="weather-item">
-                  <span class="label">UV Risk</span>
-                  <span id="resultUvRisk">--</span>
-                </div>
-              </div>
-
-              <div class="result-box advice-box" id="adviceBox">
-                Enter a city or use your current location to see outdoor advice.
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section id="audiences">
       <div class="container">
         <div class="section-head">
@@ -297,6 +270,34 @@
     </section>
   </main>
 
+  <section id="about">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>About this website</h2>
+            <p>This project now uses Flask + JavaScript + OpenWeather API, while keeping the original polished homepage layout.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <h3>Live weather</h3>
+            <p>Users can enter a city name to get current temperature, humidity, wind speed, and weather conditions.</p>
+            <a href="#tool">Try the tool →</a>
+          </article>
+          <article class="card">
+            <h3>Automatic location</h3>
+            <p>Users can allow browser geolocation and instantly check weather and UV for their current location.</p>
+            <a href="#tool">Use my location →</a>
+          </article>
+          <article class="card">
+            <h3>UV awareness</h3>
+            <p>The app shows UV Index and a clear risk level so people can make better outdoor decisions.</p>
+            <a href="#tips">Read tips →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
   <footer id="contact">
     <div class="container">
       <div class="footer-grid">
@@ -312,8 +313,8 @@
         </div>
         <div>
           <h4>Contact</h4>
-          <p>Email: xliu0193@student.monash.edu</p>
-          <p>Phone: +86 13201782023</p>
+          <p>Team Number: TA06</p>
+          <p>Team Name: Mind Spark</p>
         </div>
       </div>
       <div class="copyright">© 2026 SunSafe. Built as a learning project.</div>
